@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI 팀룸</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <!-- 첫 화면: 방 만들기 -->
+  <section id="landing" class="landing" hidden>
+    <div class="landing-card">
+      <div class="logo">🤝 AI 팀룸</div>
+      <p class="tagline">팀원 각자의 AI 작업을 한 화면에서 실시간으로 공유하세요.<br />복사·붙여넣기 없이, 피드백은 바로 그 사람의 AI에게.</p>
+      <form id="create-form">
+        <input id="room-name" placeholder="방 이름 (예: 경영학원론 3조)" maxlength="50" required />
+        <input id="room-pass" type="password" placeholder="방 비밀번호 (선택 · 4자 이상)" maxlength="100" autocomplete="new-password" />
+        <input id="create-pass" type="password" placeholder="방 만들기 비밀번호 (서버 관리자에게 받은 것)" maxlength="100" autocomplete="off" hidden />
+        <button class="primary">방 만들기</button>
+        <p id="create-error" class="muted small" hidden></p>
+      </form>
+      <form id="join-code-form" class="subtle-form">
+        <input id="room-code" placeholder="초대 코드로 입장" />
+        <button>입장</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- 팀룸 화면 -->
+  <section id="app" class="app" hidden>
+    <header class="topbar">
+      <div class="room-title">
+        <span id="room-name-label"></span>
+        <button id="invite-btn" class="ghost small" title="초대 링크 복사">🔗 초대 링크</button>
+      </div>
+      <div id="presence" class="presence"></div>
+      <div class="top-actions">
+        <button id="inbox-btn" class="ghost">💬 받은 피드백 <span id="inbox-count" class="badge">0</span></button>
+        <button id="settings-btn" class="ghost">⚙️ 내 AI 설정</button>
+      </div>
+    </header>
+
+    <!-- 보기 전환: 대화 / 프로젝트 현황 -->
+    <nav id="view-switch" class="view-switch">
+      <button data-mainview="chat" class="vtab active">💬 대화</button>
+      <button data-mainview="project" class="vtab">📊 프로젝트 현황 <span id="work-count" class="badge">0</span></button>
+      <span id="work-alert" class="work-alert"></span>
+    </nav>
+
+    <div class="taskbar" hidden>
+      <span class="taskbar-label">과제 보드</span>
+      <div id="tasks" class="tasks"></div>
+      <form id="task-form" class="task-form">
+        <input id="task-title" placeholder="+ 할 일 추가" maxlength="100" />
+        <select id="task-assignee"></select>
+      </form>
+    </div>
+
+    <!-- 웹으로 열었을 때: AI 사이트로 가는 버튼 (확장·앱 안에서는 숨김) -->
+    <div id="ai-launch" class="ai-launch-bar">
+      <span class="filter-label">AI 열기</span>
+      <a class="chip" href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT ↗</a>
+      <a class="chip" href="https://claude.ai/new" target="_blank" rel="noopener">Claude ↗</a>
+      <a class="chip" href="https://gemini.google.com/app" target="_blank" rel="noopener">Gemini ↗</a>
+      <span class="muted small">거기서 나눈 대화를 자동으로 공유하려면 <a id="ext-link" href="/install.html#extension">크롬 확장 설치</a>가 필요해요 · Claude Code·Codex는 <a id="conn-link" href="/install.html">커넥터 설치</a></span>
+    </div>
+    <div id="source-filter" class="source-filter"></div>
+    <main class="workspace">
+      <div id="columns" class="columns"></div>
+      <aside class="side">
+        <div class="tabs">
+          <button data-tab="doc" class="tab active">📄 공동 문서</button>
+          <button data-tab="stats" class="tab">📊 기여 로그</button>
+        </div>
+        <div id="tab-doc" class="tab-body">
+          <div class="doc-actions">
+            <button id="doc-add-empty" class="ghost small">+ 빈 블록</button>
+            <button id="doc-copy" class="ghost small">마크다운 복사</button>
+            <button id="doc-download" class="ghost small">.md 다운로드</button>
+          </div>
+          <div id="doc" class="doc"></div>
+        </div>
+        <div id="tab-stats" class="tab-body" hidden>
+          <div id="stats"></div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- 프로젝트 현황: 작업 흐름도 -->
+    <section id="project" class="project" hidden>
+      <div class="proj-tabs">
+        <button data-projview="flow" class="ptab active">🧭 작업 흐름도</button>
+        <button data-projview="branch" class="ptab">🌿 브랜치</button>
+      </div>
+      <div class="proj-bar" id="flow-bar">
+        <div id="proj-legend" class="proj-legend"></div>
+        <form id="work-form" class="work-form">
+          <input id="work-title" placeholder="+ 작업 추가 (예: 로그인 화면)" maxlength="100" />
+          <select id="work-owner"></select>
+          <button class="primary small">추가</button>
+        </form>
+        <div class="zoom">
+          <button type="button" data-zoom="out" title="축소">−</button>
+          <button type="button" data-zoom="reset" id="zoom-label" title="100%로">100%</button>
+          <button type="button" data-zoom="in" title="확대">+</button>
+          <button type="button" data-zoom="fit" title="전체가 보이게">전체 보기</button>
+        </div>
+      </div>
+      <div id="branch-view" class="branch-view" hidden></div>
+      <div class="proj-body" id="flow-body">
+        <div id="graph" class="graph">
+          <svg id="graph-svg" xmlns="http://www.w3.org/2000/svg"><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="context-stroke" /></marker></defs><g id="graph-vp"></g></svg>
+          <div id="graph-empty" class="graph-empty" hidden></div>
+          <div class="graph-hint">가로: 시간 (오른쪽이 최신 · 마지막으로 움직인 날 기준) · 세로: 담당자 · 마우스 휠: 확대·축소 (가리키는 곳 기준) · 끌기: 이동 · 작업을 누르면 자세히</div>
+        </div>
+        <aside id="work-detail" class="work-detail" hidden></aside>
+      </div>
+    </section>
+  </section>
+
+  <!-- 모달 -->
+  <dialog id="join-dialog">
+    <form method="dialog" id="join-form">
+      <h3>팀룸 입장</h3>
+      <p class="muted">팀원들에게 보일 이름을 입력하세요.</p>
+      <input id="join-name" placeholder="이름 (예: 민수)" maxlength="20" required />
+      <menu><button class="primary" value="ok">입장</button></menu>
+    </form>
+  </dialog>
+
+  <dialog id="invite-dialog">
+    <form method="dialog">
+      <h3>🔗 팀원 초대</h3>
+      <p id="invite-note" class="muted"></p>
+      <label>팀룸 링크 <span class="muted">(브라우저에서 보기 · 크롬 확장 연결용)</span>
+        <span class="copy-row"><input id="invite-room" readonly /><button type="button" data-copy-from="invite-room">복사</button></span>
+      </label>
+      <label>Claude Code·Codex 연결 안내 <span class="muted">(이 링크 하나만 보내면 설치·연결 방법이 다 나와요)</span>
+        <span class="copy-row"><input id="invite-install" readonly /><button type="button" data-copy-from="invite-install">복사</button></span>
+      </label>
+      <menu><button value="ok" class="primary">닫기</button></menu>
+    </form>
+  </dialog>
+
+  <dialog id="feedback-dialog">
+    <form method="dialog" id="feedback-form">
+      <h3>💬 <span id="fb-target"></span>에게 피드백</h3>
+      <blockquote id="fb-quote" class="quote"></blockquote>
+      <textarea id="fb-text" rows="4" placeholder="예: 이 사례는 2019년 자료라 오래됐어. 최근 사례로 바꿔줘" required></textarea>
+      <menu>
+        <button value="cancel" formnovalidate class="ghost">취소</button>
+        <button value="ok" class="primary">보내기</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog id="settings-dialog">
+    <form method="dialog" id="settings-form">
+      <h3>⚙️ 내 AI 설정</h3>
+      <label>AI 제공자
+        <select id="set-provider">
+          <option value="mock">연습용 가짜 AI (키 없이 기능 체험)</option>
+          <option value="anthropic">Claude (Anthropic)</option>
+          <option value="openai">ChatGPT (OpenAI)</option>
+          <option value="gemini">Gemini (Google)</option>
+        </select>
+      </label>
+      <label>모델 <input id="set-model" placeholder="기본값 사용" /></label>
+      <label>개인 API 키 <span class="muted">(선택 · 이 브라우저에만 저장)</span>
+        <input id="set-key" type="password" placeholder="비워두면 팀 공용 키 / 서버 키 사용" autocomplete="off" />
+      </label>
+      <p id="key-status" class="key-status"></p>
+      <details id="key-help">
+        <summary>API 키는 어디서 받나요?</summary>
+        <ul>
+          <li><b>Gemini</b>: aistudio.google.com 접속 → Get API key (무료 사용량 있음, 가장 쉬움)</li>
+          <li><b>Claude</b>: platform.claude.com → API Keys</li>
+          <li><b>ChatGPT</b>: platform.openai.com → API keys</li>
+          <li>어렵다면 비워두세요. 방장이 등록한 <b>팀 공용 키</b>로 사용할 수 있습니다.</li>
+        </ul>
+      </details>
+
+      <fieldset id="owner-keys" hidden>
+        <legend>👑 팀 공용 키 (방장 전용)</legend>
+        <p class="muted">여기 등록한 키는 키가 없는 팀원도 사용할 수 있습니다. 키 값은 다른 팀원에게 보이지 않고, 서버 메모리에만 있어 서버를 재시작하면 지워집니다.</p>
+        <div class="shared-key-row"><span>Claude</span><input data-shared="anthropic" type="password" placeholder="sk-ant-..." autocomplete="off" /></div>
+        <div class="shared-key-row"><span>ChatGPT</span><input data-shared="openai" type="password" placeholder="sk-..." autocomplete="off" /></div>
+        <div class="shared-key-row"><span>Gemini</span><input data-shared="gemini" type="password" placeholder="AIza..." autocomplete="off" /></div>
+        <button type="button" id="save-shared" class="ghost small">공용 키 저장</button>
+      </fieldset>
+      <menu><button value="ok" class="primary">저장</button></menu>
+    </form>
+  </dialog>
+
+  <dialog id="unlock-dialog">
+    <form id="unlock-form">
+      <h3>🔒 비밀번호가 필요한 방</h3>
+      <p class="muted">방장에게 받은 방 비밀번호를 입력하세요. 한 번 넣으면 이 기기에서는 다시 묻지 않아요.</p>
+      <input id="unlock-pass" type="password" placeholder="방 비밀번호" maxlength="100" autocomplete="current-password" required />
+      <p id="unlock-error" class="muted small"></p>
+      <menu><button class="primary">입장</button></menu>
+    </form>
+  </dialog>
+
+  <dialog id="password-dialog">
+    <form method="dialog" id="password-form">
+      <h3>🔒 방 비밀번호</h3>
+      <p id="password-state" class="muted"></p>
+      <input id="password-new" type="password" placeholder="새 비밀번호 (4자 이상)" maxlength="100" autocomplete="new-password" />
+      <p id="password-note" class="muted small"></p>
+      <menu>
+        <button value="cancel" formnovalidate class="ghost">닫기</button>
+        <button value="clear" formnovalidate class="ghost" id="password-clear">비밀번호 없애기</button>
+        <button value="ok" class="primary" id="password-save">저장</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog id="retention-dialog">
+    <form method="dialog" id="retention-form">
+      <h3>🕒 대화 자동 삭제</h3>
+      <p class="muted">팀룸에 올라온 대화를 얼마 뒤에 자동으로 지울지 정합니다. 방마다 따로예요.<br />공동 문서로 보낸 내용과 작업 현황은 지워지지 않고, 각자 PC의 원본 대화도 그대로입니다.</p>
+      <label>올라온 지 <select id="retention-hours"></select></label>
+      <p id="retention-note" class="muted small"></p>
+      <menu>
+        <button value="cancel" formnovalidate class="ghost">닫기</button>
+        <button value="ok" class="primary" id="retention-save">저장</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" hidden></div>
+  <script src="/app.js"></script>
+  <script src="/project.js"></script>
+  <script src="/branches.js"></script>
+</body>
+</html>

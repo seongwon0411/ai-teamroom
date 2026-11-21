@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'" />
+  <title>AI 팀룸 v2 시작하기</title>
+  <style>
+    :root { --bg:#f5f6f8; --panel:#fff; --line:#e4e7ec; --text:#1d2330; --muted:#6b7280; --accent:#4f46e5; }
+    @media (prefers-color-scheme: dark) { :root { --bg:#0f1115; --panel:#171a21; --line:#2a2f3a; --text:#e6e8ee; --muted:#9aa1ad; --accent:#8b8cff; } }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.6 "Pretendard","Malgun Gothic",system-ui,sans-serif; padding: 22px 24px; }
+    h1 { font-size: 20px; margin: 0 0 4px; }
+    .lead { color: var(--muted); margin: 0 0 18px; }
+    label { display: block; font-weight: 700; margin: 14px 0 4px; }
+    .hint { color: var(--muted); font-size: 12.5px; font-weight: 400; margin: 2px 0 6px; }
+    input { width: 100%; font: inherit; color: inherit; background: var(--panel); border: 1px solid var(--line); border-radius: 9px; padding: 8px 11px; }
+    input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+    button { font: inherit; color: inherit; border: 1px solid var(--line); background: var(--panel); border-radius: 9px; padding: 6px 13px; cursor: pointer; }
+    button:hover { border-color: var(--accent); }
+    button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; padding: 9px 18px; width: 100%; margin-top: 20px; }
+    button:disabled { opacity: .6; cursor: default; }
+    .folder { display: flex; align-items: center; gap: 8px; background: var(--panel); border: 1px solid var(--line); border-radius: 9px; padding: 6px 10px; margin-bottom: 6px; font-size: 13px; }
+    .folder span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: rtl; text-align: left; }
+    .folder button { border: 0; background: none; padding: 0 4px; color: var(--muted); }
+    #msg { margin-top: 12px; font-size: 13px; min-height: 20px; }
+    #msg.bad { color: #dc2626; font-weight: 600; }
+    ul { margin: 14px 0 0; padding-left: 18px; color: var(--muted); font-size: 12.5px; }
+  </style>
+</head>
+<body>
+  <h1>🤝 AI 팀룸 v2 시작하기</h1>
+  <p class="lead">한 번만 정하면 됩니다. 다음부터는 실행하면 바로 팀룸 창이 떠요.</p>
+  <form id="setup">
+    <label for="link">초대 링크</label>
+    <div class="hint">방장에게 받은 링크를 그대로 붙여넣으세요.</div>
+    <input id="link" placeholder="https://…/?room=…" required />
+
+    <label for="password">방 비밀번호 <span class="hint">(걸려 있는 방만)</span></label>
+    <input id="password" type="password" placeholder="방장에게 받은 비밀번호" maxlength="100" />
+
+    <label for="name">이름</label>
+    <div class="hint">팀룸에 보일 이름입니다.</div>
+    <input id="name" placeholder="예: 헌" maxlength="20" required />
+
+    <label>팀 프로젝트 폴더 <span class="hint">(선택)</span></label>
+    <div class="hint">Claude Code·Codex로 팀 작업을 하는 폴더입니다. 이 폴더의 새 대화는 공유할지 물어보고, 프로젝트 현황·git 브랜치도 여기서 읽어요. 나중에 추가해도 됩니다.</div>
+    <div id="folders"></div>
+    <button type="button" id="pick">+ 폴더 선택</button>
+
+    <button class="primary" id="go">시작하기</button>
+    <div id="msg"></div>
+  </form>
+  <ul>
+    <li>공유하기로 한 대화만 팀룸에 올라갑니다. 고르기 전에는 아무것도 올라가지 않아요.</li>
+    <li>설정은 내 PC의 <code>.ai-teamroom-v2</code> 폴더에 저장됩니다.</li>
+  </ul>
+  <script src="setup.js"></script>
+</body>
+</html>

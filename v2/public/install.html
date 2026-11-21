@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI 팀룸 v2 설치</title>
+  <style>
+    :root { --bg:#f5f6f8; --panel:#fff; --line:#e4e7ec; --text:#1d2330; --muted:#6b7280; --accent:#4f46e5; --code:#f3f4f6; --warn:#b45309; color-scheme: light; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0f1115; --panel:#171a21; --line:#2a2f3a; --text:#e6e8ee; --muted:#9aa1ad; --accent:#8b8cff; --code:#1c2029; --warn:#f0b35a; color-scheme: dark; } }
+    :root[data-theme="dark"] { --bg:#0f1115; --panel:#171a21; --line:#2a2f3a; --text:#e6e8ee; --muted:#9aa1ad; --accent:#8b8cff; --code:#1c2029; --warn:#f0b35a; color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.65 "Pretendard","Malgun Gothic",system-ui,sans-serif; }
+    main { max-width: 720px; margin: 0 auto; padding: 28px 16px 60px; }
+    h1 { font-size: 24px; margin: 0 0 4px; }
+    .lead { color: var(--muted); margin: 0 0 22px; }
+    .step { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; }
+    .step h2 { font-size: 16px; margin: 0 0 8px; display: flex; gap: 8px; align-items: center; }
+    .num { background: var(--accent); color: #fff; width: 24px; height: 24px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 13px; flex: none; }
+    p { margin: 6px 0; }
+    .muted { color: var(--muted); font-size: 13.5px; }
+    a.btn { display: inline-block; background: var(--accent); color: #fff; text-decoration: none; padding: 9px 16px; border-radius: 10px; font-weight: 600; margin: 6px 0; }
+    .cmd { display: flex; gap: 8px; align-items: stretch; margin: 8px 0; }
+    code, pre { font-family: Consolas, "D2Coding", monospace; font-size: 13.5px; }
+    .cmd pre { flex: 1; margin: 0; background: var(--code); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; overflow-x: auto; white-space: pre; }
+    .cmd button { border: 1px solid var(--line); background: var(--panel); color: var(--text); border-radius: 10px; padding: 0 12px; cursor: pointer; font: inherit; white-space: nowrap; }
+    .cmd button:hover { border-color: var(--accent); }
+    .warn { color: var(--warn); font-size: 13.5px; }
+    ul { margin: 6px 0; padding-left: 20px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>🤝 AI 팀룸 v2 설치</h1>
+  <p class="lead">Claude Code · Codex(ChatGPT 앱) · Claude 앱을 쓸 때 옆에 뜨는 팀룸 창입니다. 앱 하나만 받으면 되고, 터미널이나 Node.js 설치는 필요 없어요. (Windows)</p>
+
+  <div class="step">
+    <h2><span class="num">1</span> 앱 받기</h2>
+    <a class="btn" href="/downloads/AI%ED%8C%80%EB%A3%B8v2.exe" download>AI팀룸v2.exe 받기 (약 105MB)</a>
+    <p class="muted">지우지 않을 폴더(예: 바탕화면의 <code>AI_TeamRoom</code>)에 저장하세요. 예전 버전(AI팀룸.exe)과 같이 있어도 서로 섞이지 않습니다.</p>
+    <p class="warn">브라우저가 "위험할 수 있는 파일"이라고 하면 <b>계속 → 유지</b>, 실행할 때 "PC 보호"가 뜨면 <b>추가 정보 → 실행</b>을 누르세요. 서명이 없는 프로그램이라 나오는 경고입니다.</p>
+  </div>
+
+  <div class="step">
+    <h2><span class="num">2</span> 실행하고 한 번만 설정</h2>
+    <p><b>AI팀룸v2.exe</b>를 더블클릭하면 "시작하기" 화면이 뜹니다. 세 가지만 넣으세요.</p>
+    <ul>
+      <li><b>초대 링크</b> — 아래 링크를 복사해 붙여넣기</li>
+    </ul>
+    <div class="cmd"><pre id="room-link"></pre><button data-copy>복사</button></div>
+    <ul>
+      <li><b>이름</b> — 팀룸에 보일 이름</li>
+      <li><b>팀 프로젝트 폴더</b> — Claude Code·Codex로 팀 작업을 하는 폴더 (나중에 메뉴 <b>현황 → 팀 프로젝트 폴더 추가…</b>로도 가능)</li>
+    </ul>
+    <p class="muted"><b>시작하기</b>를 누르면 화면 오른쪽에 팀룸 창이 뜹니다. 다음부터는 exe만 실행하면 돼요.</p>
+  </div>
+
+  <div class="step">
+    <h2><span class="num">3</span> 대화 공유</h2>
+    <ul>
+      <li>평소처럼 Claude Code · Codex · Claude 앱 채팅을 쓰면 <b>"이 대화를 팀룸에 공유할까요?"</b>가 뜹니다. <b>공유하기</b>를 누른 대화만 올라가요.</li>
+      <li>예전 대화·다른 폴더의 대화는 메뉴 <b>공유 → 대화 공유 관리…</b>에서 골라 공유합니다.</li>
+    </ul>
+  </div>
+
+  <div class="step">
+    <h2><span class="num">4</span> 프로젝트 현황 · 브랜치</h2>
+    <ul>
+      <li>팀룸 위쪽 <b>📊 프로젝트 현황</b>에 작업 흐름도와 브랜치(원격 · 각자 PC)가 나옵니다.</li>
+      <li><b>브랜치</b>는 팀 프로젝트 폴더가 git 저장소면 자동으로 올라옵니다. 따로 할 일이 없어요.</li>
+      <li><b>작업 흐름도</b>를 AI가 직접 채우게 하려면 메뉴 <b>현황 → AI가 현황을 적도록 안내 넣기…</b>를 누르세요. 새 파일을 만드는 방식이고, <b>넣은 안내 되돌리기…</b>로 언제든 원래대로 돌릴 수 있습니다.</li>
+    </ul>
+  </div>
+</main>
+<script>
+  const room = new URLSearchParams(location.search).get("room");
+  document.getElementById("room-link").textContent = room ? `${location.origin}/?room=${encodeURIComponent(room)}` : "방장에게 받은 초대 링크";
+  document.querySelectorAll("[data-copy]").forEach((b) => (b.onclick = async () => {
+    await navigator.clipboard.writeText(b.previousElementSibling.textContent);
+    b.textContent = "복사됨 ✓";
+    setTimeout(() => (b.textContent = "복사"), 1500);
+  }));
+</script>
+</body>
+</html>

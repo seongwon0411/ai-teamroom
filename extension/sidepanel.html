@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>AI 팀룸</title>
+  <link rel="stylesheet" href="sidepanel.css" />
+</head>
+<body>
+  <p id="loading" class="loading">불러오는 중…</p>
+  <!-- 처음: 초대 링크로 연결 -->
+  <section id="connect" class="connect" hidden>
+    <div class="logo">🤝 AI 팀룸</div>
+    <p class="muted">팀장에게 받은 <b>초대 링크</b>를 붙여넣으세요.<br />그다음엔 ChatGPT·Claude·Gemini에서 평소처럼 대화만 하면 팀에 자동으로 공유됩니다.</p>
+    <form id="connect-form">
+      <input id="room-url" placeholder="https://…/?room=xxxx" required autofocus />
+      <button class="primary">연결</button>
+    </form>
+    <p id="connect-error" class="error"></p>
+  </section>
+
+  <!-- 연결 후 -->
+  <section id="main" class="main" hidden>
+    <header class="bar">
+      <div class="row ai-launch">
+        <span class="muted small">AI 열기</span>
+        <button data-ai="chatgpt">ChatGPT</button>
+        <button data-ai="claude">Claude</button>
+        <button data-ai="gemini">Gemini</button>
+      </div>
+      <div class="row">
+        <button id="share-toggle" class="share"></button>
+        <button id="ask-toggle" class="ghost small" title="새 대화를 시작할 때 공유 여부를 물어볼지, 항상 자동으로 공유할지"></button>
+        <span class="spacer"></span>
+        <span id="sync" class="sync"></span>
+        <button id="menu" class="ghost" title="다른 팀룸으로 연결">⋯</button>
+      </div>
+      <div id="conv" class="conv"></div>
+    </header>
+    <iframe id="room" title="팀룸"></iframe>
+  </section>
+  <script src="sidepanel.js"></script>
+</body>
+</html>

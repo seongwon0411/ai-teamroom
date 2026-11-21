@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI 팀룸 연결하기</title>
+  <style>
+    :root { --bg:#f5f6f8; --panel:#fff; --line:#e4e7ec; --text:#1d2330; --muted:#6b7280; --accent:#4f46e5; --code:#f3f4f6; --warn:#b45309; color-scheme: light; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0f1115; --panel:#171a21; --line:#2a2f3a; --text:#e6e8ee; --muted:#9aa1ad; --accent:#8b8cff; --code:#1c2029; --warn:#f0b35a; color-scheme: dark; } }
+    :root[data-theme="dark"] { --bg:#0f1115; --panel:#171a21; --line:#2a2f3a; --text:#e6e8ee; --muted:#9aa1ad; --accent:#8b8cff; --code:#1c2029; --warn:#f0b35a; color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.65 "Pretendard","Malgun Gothic",system-ui,sans-serif; }
+    main { max-width: 720px; margin: 0 auto; padding: 28px 16px 60px; }
+    h1 { font-size: 24px; margin: 0 0 4px; }
+    .lead { color: var(--muted); margin: 0 0 22px; }
+    .step { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; }
+    .step h2 { font-size: 16px; margin: 0 0 8px; display: flex; gap: 8px; align-items: center; }
+    .num { background: var(--accent); color: #fff; width: 24px; height: 24px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 13px; flex: none; }
+    p { margin: 6px 0; }
+    .muted { color: var(--muted); font-size: 13.5px; }
+    .dl { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
+    a.btn { display: inline-block; background: var(--accent); color: #fff; text-decoration: none; padding: 8px 14px; border-radius: 10px; font-weight: 600; }
+    a.btn.sub { background: transparent; color: var(--text); border: 1px solid var(--line); font-weight: 500; }
+    .cmd { display: flex; gap: 8px; align-items: stretch; margin: 8px 0; }
+    code, pre { font-family: Consolas, "D2Coding", monospace; font-size: 13.5px; }
+    .cmd pre { flex: 1; margin: 0; background: var(--code); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; overflow-x: auto; white-space: pre; }
+    .cmd button { border: 1px solid var(--line); background: var(--panel); color: var(--text); border-radius: 10px; padding: 0 12px; cursor: pointer; font: inherit; white-space: nowrap; }
+    .cmd button:hover { border-color: var(--accent); }
+    code.in { background: var(--code); border-radius: 5px; padding: 1px 5px; }
+    .warn { color: var(--warn); font-size: 13.5px; }
+    ul { margin: 6px 0; padding-left: 20px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>🤝 AI 팀룸 연결하기</h1>
+  <p class="lead">PC에 설치해서 쓰는 AI 앱(Claude Code · Codex/ChatGPT 앱 · Claude 앱의 채팅)에서 나눈 대화를 팀룸에 공유하는 설정입니다. 5분이면 끝나요. (Windows 기준)</p>
+
+  <div class="step">
+    <h2><span class="num">1</span> Node.js 확인</h2>
+    <p>PowerShell(터미널)을 열고 입력하세요.</p>
+    <div class="cmd"><pre>node -v</pre><button data-copy>복사</button></div>
+    <p class="muted"><code class="in">v18</code> 이상이 나오면 됩니다. 안 나오면 nodejs.org 에서 LTS 버전을 설치한 뒤 터미널을 다시 여세요.</p>
+  </div>
+
+  <div class="step">
+    <h2><span class="num">2</span> 파일 두 개 받기</h2>
+    <p>새 폴더를 하나 만들고(예: 바탕화면의 <code class="in">ai-teamroom</code>), 아래 두 파일을 <b>같은 폴더에</b> 저장하세요.</p>
+    <div class="dl">
+      <a class="btn" href="/downloads/teamroom-connector.mjs" download>① 커넥터 (teamroom-connector.mjs)</a>
+      <a class="btn" href="/downloads/AI%ED%8C%80%EB%A3%B8.exe" download>② 팀룸 창 (AI팀룸.exe · 105MB)</a>
+      <a class="btn sub" href="/downloads/%EC%82%AC%EC%9A%A9%EB%B2%95.md" download>사용법.md</a>
+    </div>
+    <p class="muted">이 폴더는 설치 후에도 지우지 마세요. 팀룸 창(AI팀룸.exe)을 이 폴더에서 실행합니다.</p>
+    <p class="warn">브라우저나 Windows가 "위험할 수 있는 파일"이라고 경고하면 <b>계속 → 유지</b>를 누르세요. 서명이 없는 프로그램이라 나오는 경고입니다.</p>
+  </div>
+
+  <div class="step">
+    <h2><span class="num">3</span> 설정하기</h2>
+    <p>파일을 저장한 폴더에서 터미널을 열고(폴더 빈 곳에서 Shift+우클릭 → "터미널에서 열기") 아래 명령을 실행하세요.</p>
+    <div class="cmd"><pre id="setup-cmd"></pre><button data-copy>복사</button></div>
+    <p>차례로 물어봅니다.</p>
+    <ul>
+      <li><b>이름</b> — 팀룸에 보일 이름</li>
+      <li><b>공유할 팀 프로젝트 폴더</b> — Claude Code·Codex를 쓰는 프로젝트 폴더 경로 (여러 개는 <code class="in">;</code> 로 구분)</li>
+      <li><b>패널 앱 경로</b> — 그냥 Enter (같은 폴더의 AI팀룸.exe를 자동으로 찾습니다)</li>
+      <li><b>자동 실행</b> — Y 를 누르면 윈도우를 켤 때 알아서 실행됩니다</li>
+    </ul>
+  </div>
+
+  <div class="step">
+    <h2><span class="num">4</span> 실행하기</h2>
+    <p>폴더의 <b>AI팀룸.exe를 더블클릭</b>하세요. 화면 오른쪽에 팀룸 창이 뜨고, 대화를 공유하는 커넥터도 함께 켜집니다. 터미널을 켜 둘 필요는 없어요.</p>
+    <p class="muted">Windows가 "PC 보호" 경고를 띄우면 <b>추가 정보 → 실행</b>을 누르세요. 잘 켜졌는지는 팀룸 창 메뉴 <b>공유 → 대화 공유 관리…</b> 아래쪽의 "● 커넥터 실행 중"으로 확인할 수 있습니다.</p>
+  </div>
+
+  <div class="step">
+    <h2><span class="num">5</span> 확인하기</h2>
+    <ul>
+      <li>팀 프로젝트 폴더에서 Claude Code나 Codex로 질문을 보냅니다.</li>
+      <li>화면 오른쪽 위에 <b>"이 대화를 팀룸에 공유할까요?"</b> 창이 뜨면 <b>공유하기</b>를 누릅니다. (고르기 전에는 아무것도 올라가지 않아요)</li>
+      <li>화면 오른쪽의 팀룸 창에 내 대화가 올라오면 성공입니다.</li>
+    </ul>
+    <p class="muted">팀 폴더가 아닌 곳의 대화, 그리고 "비공개"로 고른 대화는 공유되지 않습니다.</p>
+  </div>
+
+  <div class="step">
+    <h2><span class="num">6</span> 앱마다 공유하는 방법</h2>
+    <p>팀룸 창 메뉴 <b>공유 → 대화 공유 관리…</b>에 내 대화 목록이 나옵니다. 공유할 대화의 <b>공유하기</b>만 누르면 돼요.</p>
+    <ul>
+      <li><b>Claude Code</b> (터미널 · Claude 앱의 Code 탭) — 팀 폴더의 새 대화는 자동으로 물어보고, 다른 폴더·예전 대화는 목록에서 골라 공유합니다.</li>
+      <li><b>Codex · ChatGPT 앱</b> — Claude Code와 같습니다.</li>
+      <li><b>Claude 앱의 "채팅" 탭</b> — 앱 화면에 열어 본 대화가 목록의 "Claude 앱 채팅"에 나타납니다. 새 글을 주고받으면 공유할지 물어봐요. <span class="muted">공유 중인 대화는 앱 화면에 열려 있는 동안 올라갑니다.</span></li>
+      <li><b>브라우저로 쓰는 ChatGPT · Claude · Gemini</b> — 아래 크롬 확장을 설치하세요.</li>
+    </ul>
+  </div>
+  <h1 id="extension" style="margin-top:34px">🧩 웹에서 쓰는 경우: 크롬 확장</h1>
+  <p class="lead">chatgpt.com · claude.ai · gemini.google.com 에서 나눈 대화를 공유하려면 크롬 확장을 설치하세요. (크롬·엣지·웨일)</p>
+
+  <div class="step">
+    <h2><span class="num">1</span> 확장 파일 받기</h2>
+    <div class="dl"><a class="btn" href="/downloads/AI%ED%8C%80%EB%A3%B8-%ED%81%AC%EB%A1%AC%ED%99%95%EC%9E%A5.zip" download>크롬 확장 받기 (zip)</a></div>
+    <p class="muted">받은 zip의 압축을 풀어 지우지 않을 곳에 두세요. (폴더를 지우면 확장도 사라집니다)</p>
+  </div>
+  <div class="step">
+    <h2><span class="num">2</span> 크롬에 넣기</h2>
+    <ul>
+      <li>주소창에 <code class="in">chrome://extensions</code> 입력 (엣지는 <code class="in">edge://extensions</code>)</li>
+      <li>오른쪽 위 <b>개발자 모드</b> 켜기</li>
+      <li><b>압축해제된 확장 프로그램을 로드합니다</b> → 압축을 푼 <code class="in">AI팀룸-크롬확장</code> 폴더 선택</li>
+    </ul>
+  </div>
+  <div class="step">
+    <h2><span class="num">3</span> 연결하고 사용하기</h2>
+    <ul>
+      <li>chatgpt.com (또는 claude.ai, gemini.google.com)을 열면 <b>화면 오른쪽에 팀룸</b>이 붙습니다.</li>
+      <li>처음 한 번, 아래 초대 링크를 붙여넣고 <b>연결</b> → 이름을 넣고 입장합니다.</li>
+    </ul>
+    <div class="cmd"><pre id="room-link"></pre><button data-copy>복사</button></div>
+    <ul>
+      <li>새 대화를 시작하면 <b>"이 대화를 팀룸에 공유할까요?"</b> 카드가 뜹니다. 공유하기를 누른 대화만 올라가요.</li>
+    </ul>
+  </div>
+</main>
+<script>
+  const room = new URLSearchParams(location.search).get("room");
+  const link = room ? `${location.origin}/?room=${encodeURIComponent(room)}` : "여기에_초대_링크";
+  document.getElementById("setup-cmd").textContent = `node teamroom-connector.mjs setup --room "${link}"`;
+  document.getElementById("room-link").textContent = link;
+  document.querySelectorAll("[data-copy]").forEach((b) => (b.onclick = async () => {
+    await navigator.clipboard.writeText(b.previousElementSibling.textContent);
+    b.textContent = "복사됨 ✓";
+    setTimeout(() => (b.textContent = "복사"), 1500);
+  }));
+</script>
+</body>
+</html>

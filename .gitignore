@@ -1,0 +1,30 @@
+# 의존성 / 빌드 결과물
+node_modules/
+dist/
+release/
+win-unpacked/
+*.exe
+*.7z
+*.zip
+builder-debug.yml
+
+# 실제 방 데이터(팀원 대화·파일) — 절대 올리지 않음
+data/
+**/data/
+backups/
+*.log
+
+# 비밀 정보 — 절대 올리지 않음
+*.key
+*.key.pub
+*.pem
+.env
+.env.*
+secret.key
+v2/cloud/cloud-settings.json
+*비번*.txt
+*password*.txt
+
+# 로컬 도구 설정
+.claude/
+v2/desktop/_p.cjs

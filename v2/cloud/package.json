@@ -1,0 +1,14 @@
+{
+  "name": "ai-teamroom-v2",
+  "version": "2.0.0",
+  "private": true,
+  "description": "AI 팀룸 v2 서버 (클라우드 설치용)",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0"
+  }
+}

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'" />
+  <title>대화 공유 관리</title>
+  <style>
+    :root { --bg:#f5f6f8; --panel:#fff; --line:#e4e7ec; --text:#1d2330; --muted:#6b7280; --accent:#4f46e5; --ok:#047857; --ask:#fef3c7; }
+    @media (prefers-color-scheme: dark) { :root { --bg:#0f1115; --panel:#171a21; --line:#2a2f3a; --text:#e6e8ee; --muted:#9aa1ad; --accent:#8b8cff; --ok:#4ade80; --ask:#3a2c12; } }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 13.5px/1.5 "Pretendard","Malgun Gothic",system-ui,sans-serif; padding: 12px; }
+    h1 { font-size: 15px; margin: 0 0 2px; }
+    h2 { font-size: 12.5px; color: var(--muted); margin: 14px 0 6px; }
+    .sub { color: var(--muted); font-size: 12px; margin: 0 0 10px; }
+    .row { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; margin-bottom: 8px; }
+    .row.ask { background: var(--ask); border-color: transparent; }
+    .head { display: flex; align-items: center; gap: 6px; }
+    .badge { font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 6px; background: var(--line); white-space: nowrap; }
+    .title { flex: 1; min-width: 0; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .foot { display: flex; align-items: center; gap: 6px; margin-top: 7px; }
+    .state { flex: 1; font-size: 12.5px; color: var(--muted); }
+    .state.shared { color: var(--ok); font-weight: 600; }
+    button { font: inherit; color: inherit; border: 1px solid var(--line); background: var(--panel); border-radius: 8px; padding: 3px 11px; cursor: pointer; }
+    button:hover { border-color: var(--accent); }
+    button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    .empty { color: var(--muted); text-align: center; padding: 30px 0; }
+    .date { color: var(--muted); font-size: 11.5px; white-space: nowrap; }
+    .diag { margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); line-height: 1.7; }
+    .diag .bad { color: #dc2626; font-weight: 600; }
+    .diag .good { color: var(--ok); font-weight: 600; }
+    .rooms { border-bottom: 1px solid var(--line); margin-bottom: 12px; padding-bottom: 6px; }
+    .room { display: flex; align-items: center; gap: 6px; padding: 6px 10px; margin: 6px 0; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+    .room.current { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+    .room .name { flex: 1; min-width: 0; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .room .now { font-size: 11.5px; color: var(--accent); font-weight: 700; white-space: nowrap; }
+    #room-more summary { cursor: pointer; color: var(--accent); font-weight: 600; padding: 4px 0; }
+    #room-more form { display: flex; gap: 6px; margin: 6px 0; }
+    #room-more input { flex: 1; min-width: 0; font: inherit; color: inherit; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 5px 9px; }
+    #room-msg:empty { display: none; }
+    #room-msg.bad { color: #dc2626; }
+    #search { width: 100%; font: inherit; color: inherit; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; margin: 4px 0 2px; }
+    #search:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  </style>
+</head>
+<body>
+  <section class="rooms">
+    <h1>🏠 방</h1>
+    <div id="room-list"></div>
+    <details id="room-more">
+      <summary>+ 새 방 만들기 · 초대 링크로 들어가기</summary>
+      <form id="room-create"><input placeholder="새 방 이름 (예: 경영학원론 3조)" maxlength="50" /><button class="primary">만들기</button></form>
+      <form id="room-add"><input placeholder="받은 초대 링크 붙여넣기" /><button>들어가기</button></form>
+    </details>
+    <p id="room-msg" class="sub"></p>
+  </section>
+  <h1>🤝 대화 공유 관리</h1>
+  <p class="sub">Claude Code · Codex(ChatGPT 앱) · Claude 앱 채팅 중 <b>공유하기로 한 대화만</b> 팀룸에 올라갑니다. 이 목록은 내 PC에서만 보여요.</p>
+  <p class="sub">[공유하기]를 누르면 그 대화의 <b>처음부터 전체</b>가 올라가고, 이후 내용도 계속 공유됩니다.</p>
+  <input id="search" placeholder="대화 검색 (제목·폴더 이름)" />
+  <div id="list"></div>
+  <div id="diag" class="diag"></div>
+  <script src="sessions.js"></script>
+</body>
+</html>

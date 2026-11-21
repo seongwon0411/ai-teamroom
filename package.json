@@ -1,0 +1,14 @@
+{
+  "name": "ai-teamroom",
+  "version": "0.1.0",
+  "private": true,
+  "description": "팀원들이 각자의 AI와 작업하는 과정을 한 공간에서 실시간으로 공유하는 팀플 협업 프로토타입",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "ai-teamroom-desktop-v2",
+  "productName": "AI팀룸v2",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ChatGPT·Claude·Gemini에서 나눈 대화를 팀룸에 자동 공유하는 데스크톱 앱",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable"
+  },
+  "build": {
+    "appId": "com.aiteamroom.desktop.v2",
+    "productName": "AI팀룸v2",
+    "files": [
+      "main.js",
+      "preload/**",
+      "shell/**",
+      "package.json",
+      "connector/**"
+    ],
+    "win": {
+      "target": "portable",
+      "signAndEditExecutable": false
+    },
+    "portable": {
+      "artifactName": "AI팀룸v2.exe",
+      "unpackDirName": true
+    },
+    "directories": {
+      "output": "dist"
+    }
+  },
+  "devDependencies": {
+    "electron": "45.3.2",
+    "electron-builder": "26.18.0"
+  },
+  "allowScripts": {
+    "electron-winstaller@5.4.0": true
+  }
+}
