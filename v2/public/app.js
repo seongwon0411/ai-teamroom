@@ -640,7 +640,18 @@ function renderStats() {
     return { m, prompts, blocks, given, received, applied, tasksDone, tasksAll };
   });
   const totalBlocks = room.doc.length || 1;
-  const labels = { join: "입장", prompt: "AI에게 요청", ai_done: "AI 답변 완료", feedback: "피드백 보냄", doc_add: "문서에 추가", doc_edit: "문서 수정", doc_delete: "문서 블록 삭제", task_add: "과제 추가", task_update: "과제 상태 변경", shared_key: "공용 키 설정" };
+  const labels = { join: "입장", prompt: "AI에게 요청", ai_done: "AI 답변 완료", feedback: "피드백 보냄", doc_add: "문서에 추가", doc_edit: "문서 수정", doc_delete: "문서 블록 삭제", task_add: "과제 추가", task_update: "과제 상태 변경", shared_key: "공용 키 설정",
+    ext_prompt: "AI에게 요청", feedback_apply: "피드백 반영", file_upload: "파일 올림", password: "방 비밀번호", retention: "자동 삭제 시간 변경",
+    work_add: "작업 추가", work_status: "작업 상태 변경", work_report: "작업 현황 갱신", project_detach: "프로젝트 연결 해제" };
+  // 기록 속 영어 값(상태·AI 이름)을 한글로 — 서버에 이미 쌓인 기록도 바로 고쳐 보이도록 화면에서 바꿈
+  const words = { todo: "할 일", doing: "진행 중", done: "완료", planned: "계획됨", review: "검토 중", blocked: "차단됨",
+    chatgpt: "ChatGPT", claude: "Claude", gemini: "Gemini", claudecode: "Claude Code", codex: "Codex", mockai: "테스트 AI" };
+  const detailText = (a) => {
+    let d = String(a.detail || "");
+    if (a.kind === "task_update" || a.kind === "work_status") d = d.replace(/→ (\w+)$/, (s, w) => `→ ${words[w] || w}`);
+    if (a.kind === "ext_prompt") d = d.replace(/^(\w+):/, (s, w) => `${words[w] || w}:`);
+    return d;
+  };
   $("#stats").innerHTML = `
     <table class="stats-table">
       <thead><tr><th>팀원</th><th>AI 요청</th><th>문서 기여</th><th>피드백 준/받은/반영</th><th>과제</th></tr></thead>
@@ -650,7 +661,7 @@ function renderStats() {
         <td>${r.given} / ${r.received} / ${r.applied}</td><td>${r.tasksDone}/${r.tasksAll}</td></tr>`).join("")}</tbody>
     </table>
     <h4>최근 활동</h4>
-    <ul class="activity">${room.activity.slice(-40).reverse().map((a) => `<li>${avatar(member(a.memberId), "sm")} <b>${esc(member(a.memberId).name)}</b> ${labels[a.kind] || a.kind} <span class="muted">${esc(a.detail)}</span> <span class="muted small">${timeAgo(a.ts)}</span></li>`).join("")}</ul>`;
+    <ul class="activity">${room.activity.slice(-40).reverse().map((a) => `<li>${avatar(member(a.memberId), "sm")} <b>${esc(member(a.memberId).name)}</b> ${labels[a.kind] || "활동"} <span class="muted">${esc(detailText(a))}</span> <span class="muted small">${timeAgo(a.ts)}</span></li>`).join("")}</ul>`;
 }
 
 // ───────── 이벤트 바인딩 ─────────
