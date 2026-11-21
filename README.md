@@ -95,16 +95,9 @@ node server.js          # → http://localhost:3100
 |---|---|
 | `v2/` | **현재 버전** — 서버, 웹 화면, 데스크톱 앱, 커넥터, 클라우드 배포 |
 | `extension/` | 크롬 확장 |
-| `server.js`, `public/`, `desktop/`, `connector/` | v1 프로토타입 ([설명](docs/v1-프로토타입.md)) |
-| `tools/` | 자동 테스트 (실제 크롬 + 가짜 AI 페이지, 커넥터, 방 보관 등) |
 
 ## 테스트
 
-사람이 일일이 눌러 보지 않도록 자동 테스트를 함께 만들었습니다.
-
-- `tools/ext-test/test.mjs` — 실제 크롬에 확장을 설치하고 가짜 AI 페이지로 공유 · 피드백 · 오프라인 보관 확인
-- `tools/connector-test.mjs` — 가짜 Claude Code · Codex 기록으로 커넥터 동작 확인
-- `tools/rooms-test.mjs`, `tools/retention-test.mjs` — 방 만들기 · 비밀번호 · 보관 기간
 - 데스크톱 앱 자가 테스트: `TEAMROOM_TEST=1`로 실행
 
 ## 한계와 다음 단계
