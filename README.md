@@ -6,6 +6,16 @@ ChatGPT · Claude · Gemini · Claude Code · Codex 등 각자 평소에 쓰던 
 
 > 대학 팀 프로젝트에서 "누가 AI로 뭘 했는지 모르겠다", "결과만 붙여 넣고 과정이 안 보인다"는 문제를 풀기 위해 만들었습니다. 실제 팀에서 쓰면서 계속 고치고 있습니다.
 
+**⬇️ [최신 버전 다운로드 (Releases)](https://github.com/seongwon0411/ai-teamroom/releases/latest)** — Windows 데스크톱 앱 `AI-Teamroom-v2.exe` · 크롬 확장 zip
+
+![대화 화면: 팀원의 ChatGPT 답변에 문장 단위 피드백, 오른쪽은 공동 문서](docs/screenshots/chat.png)
+<sub>팀원의 AI 답변이 자동으로 올라오고, 문장을 집어 피드백을 남기면 받은 사람이 ↪ 피드백 반영으로 자기 AI에 바로 넣습니다. 오른쪽은 출처가 남는 공동 문서.</sub>
+
+![작업 흐름도: 가로는 시간, 세로는 담당자, 선후관계와 막힌 작업 표시](docs/screenshots/flow.png)
+<sub>프로젝트 현황 › 작업 흐름도. 가로축은 시간(오른쪽이 최신), 세로는 담당자. 선후관계와 막힌 작업이 한눈에 보입니다.</sub>
+
+<sub>※ 스크린샷은 가짜 팀원과 가짜 대화로 만든 데모 방입니다.</sub>
+
 ---
 
 ## 이런 문제를 풉니다
